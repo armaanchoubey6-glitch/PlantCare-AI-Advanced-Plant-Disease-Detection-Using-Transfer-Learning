@@ -1,0 +1,2 @@
+# PlantCare-AI-Advanced-Plant-Disease-Detection-Using-Transfer-Learning
+PlantCare AI aims to develop an accurate and efficient model for classifying plant diseases by employing transfer learning techniques. Utilizing the New Plant Diseases Dataset containing over 87,000 annotated plant leaf images categorized into 38 distinct classes including various diseases affecting crops like Apple, Corn, Grape, Potato,tomato .
