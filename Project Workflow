@@ -1,0 +1,62 @@
+The user interacts with the web interface following this flow:
+
+User Interface Interaction: User accesses the web application and navigates to the upload page
+
+Image Selection: User selects or captures an image of a plant leaf
+
+Image Processing: The uploaded image is preprocessed and resized to match model requirements
+
+Model Prediction: The integrated MobileNetV2 model analyzes the image
+
+Result Display: Prediction results with disease classification and recommendations are displayed
+
+Complete Project Activities:
+
+Data Collection and Data Preprocessing:
+
+Download and organize the New Plant Diseases Dataset
+
+Data exploration and visualization
+
+Image augmentation (already applied in dataset)
+
+Dataset splitting into training and validation sets
+
+Model Building
+
+Import necessary libraries
+
+Load pre-trained MobileNetV2 model
+
+Fine-tune the model architecture
+
+Configure model compilation
+
+Set up training callbacks
+
+Model Training
+
+Train the model with data generators
+
+Monitor training progress
+
+Implement early stopping and learning rate reduction
+
+Model Evaluation
+
+Evaluate model performance on validation set
+
+Visualize training metrics
+
+Save the best performing model
+
+Application Development
+
+Create HTML templates for web interface
+
+Develop Flask backend
+
+Integrate model with web application
+
+Test end-to-end functionality
+
