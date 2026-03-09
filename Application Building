@@ -1,0 +1,220 @@
+!pip install flask-ngrok tensorflow pillow
+
+import os
+
+# Folders for Flask
+os.makedirs("templates", exist_ok=True)
+os.makedirs("static", exist_ok=True)
+os.makedirs("uploads", exist_ok=True)
+
+print("Folders created ✅")
+
+home_html = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PlantCare AI - Home</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to PlantCare AI</h1>
+        <p>Instant plant disease detection with high accuracy and ease of use.</p>
+        <div class="features">
+            <div>🚀 Instant Detection</div>
+            <div>🎯 High Accuracy</div>
+            <div>👌 Easy to Use</div>
+        </div>
+        <a href="/upload"><button>Detect Now</button></a>
+        <a href="/about"><button>About</button></a>
+    </div>
+</body>
+</html>
+"""
+
+with open("templates/home.html", "w") as f:
+    f.write(home_html)
+
+about_html = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PlantCare AI - About</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>About PlantCare AI</h1>
+        <p>PlantCare AI uses MobileNetV2 and Transfer Learning to detect 38+ diseases across 10+ plant species with 95% accuracy.</p>
+        <div class="stats">
+            <div>🌿 38+ Diseases</div>
+            <div>✅ 95% Accuracy</div>
+            <div>🌱 10+ Plant Species</div>
+        </div>
+        <a href="/"><button>Back to Home</button></a>
+    </div>
+</body>
+</html>
+"""
+
+with open("templates/about.html", "w") as f:
+    f.write(about_html)
+
+print("about.html created ✅")
+
+upload_html = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PlantCare AI - Upload</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Plant Leaf Image</h1>
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <button type="submit">Detect Disease</button>
+        </form>
+        <a href="/"><button>Back to Home</button></a>
+    </div>
+</body>
+</html>
+"""
+
+with open("templates/upload.html", "w") as f:
+    f.write(upload_html)
+
+print("upload.html created ✅")
+
+result_html = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PlantCare AI - Result</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Prediction Result</h1>
+        <p><strong>Detected Disease:</strong> {{ prediction }}</p>
+        <img src="{{ image_path }}" width="300">
+        <br><br>
+        <a href="/upload"><button>Try Another Image</button></a>
+    </div>
+</body>
+</html>
+"""
+
+with open("templates/result.html", "w") as f:
+    f.write(result_html)
+
+print("result.html created ✅")
+
+css_content = """
+body {
+    font-family: Arial, sans-serif;
+    background-color: #eaf7ea;
+    text-align: center;
+    padding-top: 50px;
+}
+.container {
+    background-color: #fff;
+    padding: 30px;
+    margin: auto;
+    width: 60%;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {background-color: #45a049;}
+input[type=file]{margin:20px 0;}
+.features, .stats{display:flex; justify-content:space-around; margin:20px 0;}
+"""
+
+with open("static/style.css", "w") as f:
+    f.write(css_content)
+
+print("CSS file created ✅")
+
+# Step 0: Install dependencies
+!pip install flask-ngrok tensorflow pillow
+
+# Step 1: Import required libraries
+from flask import Flask, render_template, request, redirect, url_for
+from flask_ngrok import run_with_ngrok
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+import numpy as np
+import os
+
+# Step 2: Create folders
+os.makedirs("uploads", exist_ok=True)
+os.makedirs("templates", exist_ok=True)
+os.makedirs("static", exist_ok=True)
+
+# Step 3: Create Flask app
+app = Flask(__name__)
+run_with_ngrok(app)  # starts ngrok automatically
+UPLOAD_FOLDER = "uploads"
+
+from google.colab import files
+uploaded = files.upload()  # Upload plant_model.h5 manually
+
+from tensorflow.keras.models import load_model
+
+MODEL_PATH = "/content/plant_model.h5"  # Ensure this matches uploaded file
+try:
+    model = load_model(MODEL_PATH)
+    print("Model loaded successfully ✅")
+except Exception as e:
+    print("Error loading model:", e)
+
+# Step 5: Flask Routes
+@app.route('/')
+def home():
+    return render_template("home.html")
+
+@app.route('/about')
+def about():
+    return render_template("about.html")
+
+@app.route('/upload')
+def upload():
+    return render_template("upload.html")
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'file' not in request.files:
+        return "No file uploaded", 400
+    file = request.files['file']
+    if file.filename == '':
+        return "No file selected", 400
+
+    # Save file
+    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(filepath)
+
+    # Preprocess image
+    img = image.load_img(filepath, target_size=(224, 224))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array /= 255.0
+
+    # Predict
+    prediction = model.predict(img_array)
+    predicted_class = class_names[np.argmax(prediction)]
+
+    return render_template("result.html", prediction=predicted_class, image_path=filepath)
+
+# Step 6: Run Flask app in Colab (this will output the public ngrok URL)
+app.run()
+
+print("home.html created ✅")
