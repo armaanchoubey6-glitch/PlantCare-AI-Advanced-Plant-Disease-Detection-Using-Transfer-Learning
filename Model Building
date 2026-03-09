@@ -1,0 +1,56 @@
+from tensorflow.keras.applications import MobileNetV2
+
+# Load the pre-trained MobileNetV2 model, excluding the top classification layer
+base_model = MobileNetV2(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
+
+print("Pre-trained MobileNetV2 loaded successfully.")
+
+base_model.trainable = False
+
+print("MobileNetV2 base model weights frozen.")
+
+num_classes = train_generator.num_classes
+
+# Create a new model on top
+model = models.Sequential([
+    base_model,
+    layers.GlobalAveragePooling2D(),
+    layers.Dense(128, activation='relu'),
+    layers.Dense(num_classes, activation='softmax')
+])
+
+print(f"Number of classes for output layer: {num_classes}")
+print("Custom classification head added to the model.")
+
+model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+print("Model compiled successfully.")
+model.summary()
+
+from tensorflow.keras.callbacks import EarlyStopping
+
+early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+
+print("EarlyStopping callback defined to monitor 'val_loss' with patience=5.")
+
+from tensorflow.keras.callbacks import ModelCheckpoint
+
+model_checkpoint = ModelCheckpoint(
+    filepath='best_model.weights.h5',
+    monitor='val_accuracy',
+    save_best_only=True,
+    mode='max',
+    verbose=1
+)
+
+print("ModelCheckpoint callback defined to save best model weights based on 'val_accuracy'.")
+
+callbacks = [early_stopping, model_checkpoint]
+
+print("Training callbacks list created: early_stopping and model_checkpoint are ready.")
