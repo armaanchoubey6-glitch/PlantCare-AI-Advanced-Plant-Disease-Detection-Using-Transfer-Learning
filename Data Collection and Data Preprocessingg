@@ -1,0 +1,203 @@
+!pip install kagglehub tensorflow
+
+import kagglehub
+import os
+import tensorflow as tf
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras import layers, models
+
+# Download dataset
+path = kagglehub.dataset_download("vipoooool/new-plant-diseases-dataset")
+print("Dataset downloaded to:", path)
+
+# Python imports & configuration
+import os
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+# Setup Kaggle API
+!mkdir -p ~/.kaggle
+!cp kaggle.json ~/.kaggle/
+!chmod 600 ~/.kaggle/kaggle.json
+
+# Download dataset if not already downloaded
+import os
+
+if not os.path.exists("/kaggle/input/new-plant-diseases-dataset"):
+
+    !kaggle datasets download \
+        -d vipoooool/new-plant-diseases-dataset \
+        -p /content
+
+    !unzip -q /kaggle/input/new-plant-diseases-dataset \
+        -d /kaggle/input/new-plant-diseases-dataset
+
+# Verify dataset
+!ls -lah /kaggle/input/new-plant-diseases-dataset
+
+# Setup Kaggle API
+!mkdir -p ~/.kaggle
+!cp kaggle.json ~/.kaggle/
+!chmod 600 ~/.kaggle/kaggle.json
+
+# Download dataset if not already downloaded
+import os
+
+if not os.path.exists("/kaggle/input/new-plant-diseases-dataset"):
+
+    !kaggle datasets download \
+        -d vipoooool/new-plant-diseases-dataset \
+        -p /content
+
+    !unzip -q /kaggle/input/new-plant-diseases-dataset \
+        -d /kaggle/input/new-plant-diseases-dataset
+
+# Verify dataset
+!ls -lah /kaggle/input/new-plant-diseases-dataset
+
+# Verify dataset
+!ls -lah /kaggle/input/new-plant-diseases-dataset
+
+train_dir = os.path.join(path, 'New Plant Diseases Dataset(Augmented)', 'New Plant Diseases Dataset(Augmented)', 'train')
+validation_dir = os.path.join(path, 'New Plant Diseases Dataset(Augmented)', 'New Plant Diseases Dataset(Augmented)', 'valid')
+test_dir = os.path.join(path, 'test')
+
+print(f"Training directory: {train_dir}")
+print(f"Validation directory: {validation_dir}")
+print(f"Test directory: {test_dir}")
+
+img_height = 256
+img_width = 256
+batch_size = 32
+
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True
+)
+
+validation_datagen = ImageDataGenerator(rescale=1./255)
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+print(f"Image height: {img_height}, Image width: {img_width}")
+print(f"Batch size: {batch_size}")
+print("ImageDataGenerator for training, validation, and test datasets initialized.")
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical'
+)
+
+validation_generator = validation_datagen.flow_from_directory(
+    validation_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical'
+)
+
+test_generator = test_datagen.flow_from_directory(
+    test_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical',
+    shuffle=False
+)
+
+print("\nTraining generator created successfully.")
+print(f"Found {train_generator.samples} images belonging to {train_generator.num_classes} classes.")
+
+print("\nValidation generator created successfully.")
+print(f"Found {validation_generator.samples} images belonging to {validation_generator.num_classes} classes.")
+
+print("\nTest generator created successfully.")
+print(f"Found {test_generator.samples} images belonging to {test_generator.num_classes} classes.")
+
+!ls -l /kaggle/input/new-plant-diseases-dataset/
+
+train_dir = os.path.join(path, 'new plant diseases dataset(augmented)', 'train')
+validation_dir = os.path.join(path, 'new plant diseases dataset(augmented)', 'valid')
+test_dir = os.path.join(path, 'test') # This path was already correct
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical'
+)
+
+validation_generator = validation_datagen.flow_from_directory(
+    validation_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical'
+)
+
+test_generator = test_datagen.flow_from_directory(
+    test_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical',
+    shuffle=False
+)
+
+print("\nTraining generator created successfully.")
+print(f"Found {train_generator.samples} images belonging to {train_generator.num_classes} classes.")
+
+print("\nValidation generator created successfully.")
+print(f"Found {validation_generator.samples} images belonging to {validation_generator.num_classes} classes.")
+
+print("\nTest generator created successfully.")
+print(f"Found {test_generator.samples} images belonging to {test_generator.num_classes} classes.")
+
+train_dir = os.path.join(path, 'New Plant Diseases Dataset(Augmented)', 'New Plant Diseases Dataset(Augmented)', 'train')
+validation_dir = os.path.join(path, 'New Plant Diseases Dataset(Augmented)', 'New Plant Diseases Dataset(Augmented)', 'valid')
+test_dir = os.path.join(path, 'test')
+
+print(f"Training directory: {train_dir}")
+print(f"Validation directory: {validation_dir}")
+print(f"Test directory: {test_dir}")
+
+train_dir = os.path.join(path, 'New Plant Diseases Dataset(Augmented)', 'New Plant Diseases Dataset(Augmented)', 'train')
+validation_dir = os.path.join(path, 'New Plant Diseases Dataset(Augmented)', 'New Plant Diseases Dataset(Augmented)', 'valid')
+test_dir = os.path.join(path, 'test') # This path was already correct
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical'
+)
+
+validation_generator = validation_datagen.flow_from_directory(
+    validation_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical'
+)
+
+test_generator = test_datagen.flow_from_directory(
+    test_dir,
+    target_size=(img_height, img_width),
+    batch_size=batch_size,
+    class_mode='categorical',
+    shuffle=False
+)
+
+print("\nTraining generator created successfully.")
+print(f"Found {train_generator.samples} images belonging to {train_generator.num_classes} classes.")
+
+print("\nValidation generator created successfully.")
+print(f"Found {validation_generator.samples} images belonging to {validation_generator.num_classes} classes.")
+
+print("\nTest generator created successfully.")
+print(f"Found {test_generator.samples} images belonging to {test_generator.num_classes} classes.")
+
