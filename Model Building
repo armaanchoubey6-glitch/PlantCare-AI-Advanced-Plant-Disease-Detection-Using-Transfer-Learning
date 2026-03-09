@@ -33,24 +33,4 @@ model.compile(
 print("Model compiled successfully.")
 model.summary()
 
-from tensorflow.keras.callbacks import EarlyStopping
 
-early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-
-print("EarlyStopping callback defined to monitor 'val_loss' with patience=5.")
-
-from tensorflow.keras.callbacks import ModelCheckpoint
-
-model_checkpoint = ModelCheckpoint(
-    filepath='best_model.weights.h5',
-    monitor='val_accuracy',
-    save_best_only=True,
-    mode='max',
-    verbose=1
-)
-
-print("ModelCheckpoint callback defined to save best model weights based on 'val_accuracy'.")
-
-callbacks = [early_stopping, model_checkpoint]
-
-print("Training callbacks list created: early_stopping and model_checkpoint are ready.")
